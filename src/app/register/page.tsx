@@ -2,28 +2,14 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, Lock, Mail, User, UserCheck } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-
+import {toast} from "sonner";
+import { registerUserAction } from "@/features/auth/authActions";
 
 interface RegistrationFormData {
   name: string;
@@ -44,8 +30,6 @@ const Registration: React.FC = () => {
     confirmPassword: "",
   });
 
-
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -56,12 +40,29 @@ const Registration: React.FC = () => {
     }));
   };
 
-  console.log(formData);
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
 
-  const handleSubmit = (e: FormEvent) => {
-    try {} catch (error) {}
+    const registrationData={
+      name: formData.name.trim(),
+      userName: formData.userName.trim(),
+      email: formData.email.toLowerCase().trim(),
+      role: formData.role,
+      password: formData.password,
+    }
+
+    if(formData.password!==formData.confirmPassword){
+      return toast.error("Passwords should be same!");
+    }
+
+    const result=await registerUserAction(registrationData);
+
+    if(result.status==="SUCCESS"){
+      toast.success(result.message);
+    }else{
+      toast.error(result.message);
+    }
   };
-
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -82,6 +83,7 @@ const Registration: React.FC = () => {
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
+                  name="name"
                   id="name"
                   type="text"
                   placeholder="Enter your full name"
@@ -101,6 +103,7 @@ const Registration: React.FC = () => {
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
+                  name="userName"
                   id="userName"
                   type="text"
                   placeholder="Choose a username"
@@ -120,6 +123,7 @@ const Registration: React.FC = () => {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
+                  name="email"
                   id="email"
                   type="email"
                   placeholder="Enter your email"
@@ -138,6 +142,7 @@ const Registration: React.FC = () => {
               <Label htmlFor="role">I am a *</Label>
               <Select
                 value={formData.role}
+                name="role"
                 onValueChange={(value: "applicant" | "employer") =>
                   handleInputChange("role", value)
                 }
@@ -159,6 +164,7 @@ const Registration: React.FC = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   required
@@ -192,6 +198,7 @@ const Registration: React.FC = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   required
@@ -224,7 +231,7 @@ const Registration: React.FC = () => {
 
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
-                Already have an account?
+                Already have an account?{" "}
                 <Link
                   href="/login"
                   className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline"

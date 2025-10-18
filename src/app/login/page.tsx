@@ -2,21 +2,13 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
-
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, Lock, Mail, UserCheck } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-
+import { loginUserAction } from "@/features/auth/authActions";
 
 interface LoginFormData {
   email: string;
@@ -29,10 +21,7 @@ const Login: React.FC = () => {
     password: "",
   });
 
-
-
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (name: string, value: string) => {
     setFormData((prev) => ({
@@ -41,12 +30,24 @@ const Login: React.FC = () => {
     }));
   };
 
-  console.log(formData);
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
 
-  const handleSubmit = (e: FormEvent) => {
-    try {} catch (error) {}
+    try {
+      const loginData={
+        email: formData.email.toLowerCase().trim(),
+        password: formData.password,
+      }
+
+      const result= await loginUserAction(loginData);;
+      
+      if(result.status==="SUCCESS"){
+        toast.success(result.message);
+      }else{
+        toast.error(result.message);
+      }
+    } catch (error) {}
   };
-
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -70,6 +71,7 @@ const Login: React.FC = () => {
                 <Input
                   id="email"
                   type="email"
+                  name="email"
                   placeholder="Enter your email"
                   required
                   value={formData.email}
@@ -88,6 +90,7 @@ const Login: React.FC = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   required
