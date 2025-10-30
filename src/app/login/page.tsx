@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,37 +9,25 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { loginUserAction } from "@/features/auth/authActions";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+import { loginUserData, loginUserSchema } from "@/features/auth/authSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 const Login: React.FC = () => {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
-  });
+  const {
+      register,
+      handleSubmit,
+      watch,
+      formState: { errors },
+    } = useForm({
+      resolver: zodResolver(loginUserSchema),
+    });
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleInputChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: loginUserData) => {
     try {
-      const loginData={
-        email: formData.email.toLowerCase().trim(),
-        password: formData.password,
-      }
-
-      const result= await loginUserAction(loginData);;
+      const result= await loginUserAction(data);
       
       if(result.status==="SUCCESS"){
         toast.success(result.message);
@@ -61,7 +49,7 @@ const Login: React.FC = () => {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
             {/* Email Field */}
             <div className="space-y-2">
@@ -71,16 +59,13 @@ const Login: React.FC = () => {
                 <Input
                   id="email"
                   type="email"
-                  name="email"
                   placeholder="Enter your email"
                   required
-                  value={formData.email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("email", e.target.value)
-                  }
-                  className={`pl-10 `}
+                  {...register("email")}
+                  className={`pl-10 ${errors.email?"border-destructive":""}`}
                 />
               </div>
+              {errors.email && (<p className="text-sm text-destructive">{errors.email.message}</p>)}
             </div>
 
             {/* Password Field */}
@@ -90,15 +75,11 @@ const Login: React.FC = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="password"
-                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   required
-                  value={formData.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("password", e.target.value)
-                  }
-                  className={`pl-10 pr-10 `}
+                  {...register("password")}
+                  className={`pl-10 pr-10 ${errors.password?"border-destructive":""}`}
                 />
 
                 <Button
@@ -115,6 +96,7 @@ const Login: React.FC = () => {
                   )}
                 </Button>
               </div>
+              {errors.password && (<p className="text-sm text-destructive">{errors.password.message}</p>)}
             </div>
 
             {/* Submit Button */}

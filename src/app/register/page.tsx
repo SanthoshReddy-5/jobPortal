@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,7 +62,7 @@ const Registration: React.FC = () => {
                   placeholder="Enter your full name"
                   required
                   {...register("name")}
-                  className={`pl-10 ${errors.userName?"border-destructive":""}`}
+                  className={`pl-10 ${errors.name?"border-destructive":""}`}
                 />
               </div>
               {errors.name && (<p className="text-sm text-destructive">{errors.name.message}</p>)}
@@ -96,7 +96,7 @@ const Registration: React.FC = () => {
                   placeholder="Enter your email"
                   required
                   {...register("email")}
-                  className={`pl-10 ${errors.userName?"border-destructive":""}`}
+                  className={`pl-10 ${errors.email?"border-destructive":""}`}
                 />
               </div>
               {errors.email && (<p className="text-sm text-destructive">{errors.email.message}</p>)}
@@ -130,7 +130,7 @@ const Registration: React.FC = () => {
                   placeholder="Create a strong password"
                   required
                   {...register("password")}
-                  className={`pl-10 pr-10 ${errors.userName?"border-destructive":""}`}
+                  className={`pl-10 pr-10 ${errors.password?"border-destructive":""}`}
                 />
 
                 <Button
@@ -161,7 +161,7 @@ const Registration: React.FC = () => {
                   placeholder="Confirm your password"
                   required
                   {...register("confirmPassword")}
-                  className={`pl-10 pr-10 ${errors.userName?"border-destructive":""}`}
+                  className={`pl-10 pr-10 ${errors.confirmPassword?"border-destructive":""}`}
                 />
                 <Button
                   type="button"

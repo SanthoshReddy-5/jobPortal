@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 export const registerUserSchema = z.object({
     name: z.string().trim().min(4, "Name must be atleast 4 characters.").max(255, "Name must not exceed 255 characters."),
@@ -18,3 +18,12 @@ export const registerUserWithConfirmSchema = registerUserSchema.extend({
   });
 
 export type registerUserWithConfirmData = z.infer<typeof registerUserWithConfirmSchema>;
+
+
+
+export const loginUserSchema = z.object({
+    email:z.email("Please enter a valid email address.").trim().max(255,"Email must not exceed 255 characters.").toLowerCase(),
+    password: z.string().min(8, "Password must be atleast 8 characters.")
+});
+
+export type loginUserData=z.infer<typeof loginUserSchema>;
