@@ -1,7 +1,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/features/auth/authQueries";
 
-export default function Home() {
+export default async function Home() {
+
+  const user=await getCurrentUser();
+  console.log("user data:",user);
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -16,11 +21,7 @@ export default function Home() {
           <Button>Click me</Button>
         <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
           <li className="mb-2 tracking-[-.01em]">
-            Get started with Job Portal Application
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
+            Get started with Job Portal Application by {user?.name}
           </li>
           <li className="tracking-[-.01em]">
             Save and see your changes instantly.

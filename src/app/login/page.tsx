@@ -15,26 +15,26 @@ import { useForm } from "react-hook-form";
 
 const Login: React.FC = () => {
   const {
-      register,
-      handleSubmit,
-      watch,
-      formState: { errors },
-    } = useForm({
-      resolver: zodResolver(loginUserSchema),
-    });
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginUserSchema),
+  });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: loginUserData) => {
     try {
-      const result= await loginUserAction(data);
-      
-      if(result.status==="SUCCESS"){
+      const result = await loginUserAction(data);
+
+      if (result.status === "SUCCESS") {
         toast.success(result.message);
-      }else{
+      } else {
         toast.error(result.message);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -62,7 +62,7 @@ const Login: React.FC = () => {
                   placeholder="Enter your email"
                   required
                   {...register("email")}
-                  className={`pl-10 ${errors.email?"border-destructive":""}`}
+                  className={`pl-10 ${errors.email ? "border-destructive" : ""}`}
                 />
               </div>
               {errors.email && (<p className="text-sm text-destructive">{errors.email.message}</p>)}
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
                   placeholder="Create a strong password"
                   required
                   {...register("password")}
-                  className={`pl-10 pr-10 ${errors.password?"border-destructive":""}`}
+                  className={`pl-10 pr-10 ${errors.password ? "border-destructive" : ""}`}
                 />
 
                 <Button
@@ -111,7 +111,7 @@ const Login: React.FC = () => {
                   href="/register"
                   className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline"
                 >
-                 Sign Up here
+                  Sign Up here
                 </Link>
               </p>
             </div>

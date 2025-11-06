@@ -8,32 +8,40 @@ import { Eye, EyeOff, Lock, Mail, User, UserCheck } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import { registerUserAction } from "@/features/auth/authActions";
 import { registerUserWithConfirmData, registerUserWithConfirmSchema } from "@/features/auth/authSchema";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 const Registration: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerUserWithConfirmSchema),
   });
 
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = async (data: registerUserWithConfirmData) => {
+    const result = await registerUserAction(data);
 
-    const result=await registerUserAction(data);
-
-    if(result.status==="SUCCESS"){
+    if (result.status === "SUCCESS") {
       toast.success(result.message);
-    }else{
+
+      if (data.role === "employer") {
+        router.push("/employer-dashboard");
+      } else {
+        router.push("/dashboard");
+      }
+    } else {
       toast.error(result.message);
     }
   };
@@ -62,7 +70,7 @@ const Registration: React.FC = () => {
                   placeholder="Enter your full name"
                   required
                   {...register("name")}
-                  className={`pl-10 ${errors.name?"border-destructive":""}`}
+                  className={`pl-10 ${errors.name ? "border-destructive" : ""}`}
                 />
               </div>
               {errors.name && (<p className="text-sm text-destructive">{errors.name.message}</p>)}
@@ -79,7 +87,7 @@ const Registration: React.FC = () => {
                   placeholder="Choose a username"
                   required
                   {...register("userName")}
-                  className={`pl-10 ${errors.userName?"border-destructive":""}`}
+                  className={`pl-10 ${errors.userName ? "border-destructive" : ""}`}
                 />
               </div>
               {errors.userName && (<p className="text-sm text-destructive">{errors.userName.message}</p>)}
@@ -96,7 +104,7 @@ const Registration: React.FC = () => {
                   placeholder="Enter your email"
                   required
                   {...register("email")}
-                  className={`pl-10 ${errors.email?"border-destructive":""}`}
+                  className={`pl-10 ${errors.email ? "border-destructive" : ""}`}
                 />
               </div>
               {errors.email && (<p className="text-sm text-destructive">{errors.email.message}</p>)}
@@ -105,17 +113,18 @@ const Registration: React.FC = () => {
             {/* Role Selection */}
             <div className="space-y-2 w-full">
               <Label htmlFor="role">I am a *</Label>
-              <Select
-                {...register("role")}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="applicant">Job Applicant</SelectItem>
-                  <SelectItem value="employer">Employer</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller name="role" control={control} render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select your role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="applicant">Job Applicant</SelectItem>
+                    <SelectItem value="employer">Employer</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}>
+              </Controller>
               {errors.role && (<p className="text-sm text-destructive">{errors.role.message}</p>)}
             </div>
 
@@ -130,7 +139,7 @@ const Registration: React.FC = () => {
                   placeholder="Create a strong password"
                   required
                   {...register("password")}
-                  className={`pl-10 pr-10 ${errors.password?"border-destructive":""}`}
+                  className={`pl-10 pr-10 ${errors.password ? "border-destructive" : ""}`}
                 />
 
                 <Button
@@ -161,7 +170,7 @@ const Registration: React.FC = () => {
                   placeholder="Confirm your password"
                   required
                   {...register("confirmPassword")}
-                  className={`pl-10 pr-10 ${errors.confirmPassword?"border-destructive":""}`}
+                  className={`pl-10 pr-10 ${errors.confirmPassword ? "border-destructive" : ""}`}
                 />
                 <Button
                   type="button"
