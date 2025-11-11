@@ -10,17 +10,18 @@ type CreateUserSessionData={
     token:string,
     userId:number,
     userAgent:string,
-    ip:string
+    ip:string,
+    tx?:DbClient
 }
 
 const generateSessionToken=()=>{
     return crypto.randomBytes(32).toString("hex").normalize();
 }
 
-const createUserSession=async({token,userId,userAgent,ip}:CreateUserSessionData)=>{
+const createUserSession=async({token,userId,userAgent,ip,tx=db}:CreateUserSessionData)=>{
    const hashedToken=crypto.createHash("sha-256").update(token).digest("hex");
 
-   const [session]=await db.insert(sessions).values({
+   const [session]=await tx.insert(sessions).values({
     id:hashedToken,
     userId,
     expiresAt:new Date(Date.now()+SESSION_LIFETIME*1000),
@@ -31,7 +32,9 @@ const createUserSession=async({token,userId,userAgent,ip}:CreateUserSessionData)
    return session;
 }
 
-export const createSessionAndCookies=async (userId:number)=>{
+type DbClient=typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+export const createSessionAndCookies=async (userId:number, tx:DbClient=db)=>{
     const token=generateSessionToken();
     const ip=await getIpAddress();
     const headersList=await headers();
@@ -40,7 +43,8 @@ export const createSessionAndCookies=async (userId:number)=>{
         token:token,
         userId:userId,
         userAgent:headersList.get("user-agent") || "",
-        ip:ip
+        ip:ip,
+        tx
     });
 
     const cookieStore=await cookies();
@@ -88,6 +92,6 @@ export const validateSessionAndGetUser=async(session:string)=>{
     return user;
 }
 
-const invalidateSession=async(id:string)=>{
+export const invalidateSession=async(id:string)=>{
     await db.delete(sessions).where(eq(sessions.id,id));
 }
