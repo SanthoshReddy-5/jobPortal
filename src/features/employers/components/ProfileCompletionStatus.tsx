@@ -1,5 +1,5 @@
-import { AlertTriangle } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { redirect } from "next/navigation";
@@ -7,23 +7,23 @@ import { getCurrentEmployerDetails } from "../employerQueries";
 
 export async function ProfileCompletionStatus() {
 
-  const currentEmployer=await getCurrentEmployerDetails();
+  const currentEmployer = await getCurrentEmployerDetails();
 
-  if(!currentEmployer){
+  if (!currentEmployer) {
     return redirect("/login");
   }
 
-  if(currentEmployer.isProfileCompleted){
+  if (currentEmployer.isProfileCompleted) {
     return null;
   }
 
   return (
     <Alert
       variant="destructive"
-      className="flex items-center justify-between border border-destructive/40 bg-destructive/5">
+      className="flex items-center justify-between border border-destructive/40 bg-destructive/5 p-5">
       <div className="flex items-start gap-4">
-        <div className="h-10 w-10 flex items-center justify-center rounded-md bg-destructive/15">
-          <AlertTriangle className="h-5 w-5" />
+        <div className="h-15 w-15 flex items-center justify-center rounded-md bg-destructive/15">
+          <AlertTriangle className="h-8 w-8" />
         </div>
 
         <div className="flex flex-col gap-1">
@@ -41,5 +41,6 @@ export async function ProfileCompletionStatus() {
         <Link href="/employer-dashboard/settings">Complete Profile</Link>
       </Button>
     </Alert>
+
   )
 }
