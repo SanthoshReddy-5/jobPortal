@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Briefcase, Building2, Calendar, FileText, Globe, MapPin } from 'lucide-react';
+import { Briefcase, Building2, Calendar, FileText, Globe, Loader, MapPin } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { updateEmployerProfileAction } from '../employerActions';
@@ -14,9 +14,20 @@ import { toast } from 'sonner';
 import { EmployerProfileData, employerProfileSchema, organizationTypeOptions, teamSizeOptions } from '../employerSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-const EmployerSettingsForm = () => {
+const EmployerSettingsForm = ({ initialData }: {
+    initialData?: Partial<EmployerProfileData>;
+}) => {
 
-    const { register, handleSubmit, control, formState: { errors } } = useForm<EmployerProfileData>({
+    const { register, handleSubmit, control, formState: { errors, isDirty, isSubmitting } } = useForm<EmployerProfileData>({
+        defaultValues: {
+            name: initialData?.name || "",
+            description: initialData?.description || "",
+            organizationType: initialData?.organizationType || undefined,
+            teamSize: initialData?.teamSize || undefined,
+            yearOfEstablishment: initialData?.yearOfEstablishment,
+            websiteUrl: initialData?.websiteUrl || "",
+            location: initialData?.location || "",
+        },
         resolver: zodResolver(employerProfileSchema)
     });
 
@@ -185,7 +196,13 @@ const EmployerSettingsForm = () => {
                         {errors.websiteUrl && (<p className="text-sm text-destructive">{errors.websiteUrl.message}</p>)}
                     </div>
 
-                    <Button type="submit">Update Profile</Button>
+                    <div className='flex items-center gap-4 pt-4'>
+                        <Button type="submit">
+                            {isSubmitting && <Loader className="w-4 h-4 animate-spin" />}
+                            {isSubmitting ? "Updating Profile..." : "Update Profile"}
+                        </Button>
+                        {!isDirty && <p className='text-sm text-muted-foreground'>No changes to Save</p>}
+                    </div>
                 </form>
             </CardContent>
 
