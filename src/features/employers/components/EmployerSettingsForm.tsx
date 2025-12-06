@@ -5,14 +5,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Briefcase, Building2, Calendar, FileText, Globe, Loader, MapPin } from 'lucide-react';
+import { Briefcase, Building2, Calendar, Globe, Loader, MapPin } from 'lucide-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { updateEmployerProfileAction } from '../employerActions';
 import { toast } from 'sonner';
 import { EmployerProfileData, employerProfileSchema, organizationTypeOptions, teamSizeOptions } from '../employerSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import TiptapEditor from '@/components/TiptapEditor';
 
 const EmployerSettingsForm = ({ initialData }: {
     initialData?: Partial<EmployerProfileData>;
@@ -63,21 +63,22 @@ const EmployerSettingsForm = ({ initialData }: {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="description">Company Description *</Label>
-                        <div className="relative">
-                            <FileText className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-                            <Textarea
-                                id="description"
-                                placeholder="Tell us about your company, what you do, and your mission..."
-                                className={`pl-10 min-h-[120px] resize-none ${errors.description ? "border-destructive" : ""} `}
-                                {...register("description")}
-                            />
-                        </div>
-                        {errors.description && (
-                            <p className="text-sm text-destructive">
-                                {errors.description.message}
-                            </p>
-                        )}
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field, fieldState }) => (
+                                <div className="space-y-2">
+                                    <Label>Description *</Label>
+                                    <TiptapEditor content={field.value} onChange={field.onChange} />
+
+                                    {fieldState.error && (
+                                        <p className="text-sm text-destructive">
+                                            {fieldState.error.message}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
