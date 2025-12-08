@@ -3,17 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { logoutUserAction } from "@/features/auth/authActions";
 import { cn } from "@/lib/utils";
-import {
-    LayoutDashboard,
-    User,
-    Plus,
-    Briefcase,
-    Bookmark,
-    CreditCard,
-    Building,
-    Settings,
-    LogOut
-} from "lucide-react";
+import { LayoutDashboard, User, Plus, Briefcase, Bookmark, CreditCard, Building, Settings, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { URLPattern } from "next/server";
