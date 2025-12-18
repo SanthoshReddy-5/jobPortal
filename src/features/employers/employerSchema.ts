@@ -48,7 +48,8 @@ export const employerProfileSchema = z.object({
     ),
     websiteUrl: z.url("Please enter a valid URL (e.g., https://example.com)").trim().max(500, "Website URL must not exceed 500 characters").optional().or(z.literal("")),
     location: z.string().trim().min(2, "Location must be at least 2 characters long").max(255, "Location must not exceed 255 characters"), 
-    // avatarUrl: z.url("Please upload the image"),
+    avatarUrl: z.url("Please upload the image"),
+    bannerImageUrl: z.url("Please upload the image").optional().or(z.literal(""))
 });
 
 export type EmployerProfileData = z.infer<typeof employerProfileSchema>;

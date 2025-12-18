@@ -68,7 +68,7 @@ export const validateSessionAndGetUser=async(session:string)=>{
       phoneNumber: users.phoneNumber,
       email: users.email,
       // emailVerifiedAt: users.emailVerifiedAt,
-      // avatarUrl: users.avatarUrl,
+      avatarUrl: users.avatarUrl,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
     }).from(sessions).where(eq(sessions.id, hashedToken))

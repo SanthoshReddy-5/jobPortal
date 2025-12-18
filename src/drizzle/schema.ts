@@ -7,8 +7,9 @@ export const users = mysqlTable('users', {
   userName: varchar("username",{ length: 255 }).notNull().unique(),
   email: varchar("email",{ length: 255 }).notNull().unique(),
   password:text("password").notNull(),
-  role:mysqlEnum("role",["admin","employer","applicant"]).default("applicant"),
+  role:mysqlEnum("role",["admin","employer","applicant"]).default("applicant").notNull(),
   phoneNumber:varchar("phone_number",{length:255}),
+  avatarUrl:text("avatar_url"),
   deletedAt:timestamp("deleted_at"),
   createdAt:timestamp("created_at").defaultNow().notNull(),
   updatedAt:timestamp("updated_at").defaultNow().onUpdateNow().notNull()
@@ -28,7 +29,6 @@ export const employers = mysqlTable("employers", {
   id: int("id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }),
   description: text("description"),
-  avatarUrl: text("avatar_url"),
   bannerImageUrl: text("banner_image_url"),
   organizationType: varchar("organization_type", { length: 100 }),
   teamSize: varchar("team_size", { length: 50 }),

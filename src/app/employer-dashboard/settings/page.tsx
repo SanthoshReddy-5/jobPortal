@@ -1,5 +1,6 @@
 import EmployerSettingsForm from "@/features/employers/components/EmployerSettingsForm";
 import { getCurrentEmployerDetails } from "@/features/employers/employerQueries";
+import { EmployerProfileData } from "@/features/employers/employerSchema";
 import { redirect } from "next/navigation";
 
 const EmployerSettingsPage = async () => {
@@ -10,19 +11,23 @@ const EmployerSettingsPage = async () => {
     return redirect("/login");
   }
 
-  console.log("Current Employer:",currentEmployer);
+  console.log("Current Employer:", currentEmployer);
 
   return (
     <div>
-      <EmployerSettingsForm initialData={{
-        name:currentEmployer.employerDetails.name,
-        description:currentEmployer.employerDetails.description,
-        organizationType:currentEmployer.employerDetails.organizationType,
-        teamSize:currentEmployer.employerDetails.teamSize,
-        location:currentEmployer.employerDetails.location,
-        websiteUrl:currentEmployer.employerDetails.websiteUrl,
-        yearOfEstablishment:currentEmployer.employerDetails.yearOfEstablishment?.toString()
-      }}/>
+      <EmployerSettingsForm initialData={
+        {
+          name: currentEmployer.employerDetails.name,
+          description: currentEmployer.employerDetails.description,
+          organizationType: currentEmployer.employerDetails.organizationType,
+          teamSize: currentEmployer.employerDetails.teamSize,
+          location: currentEmployer.employerDetails.location,
+          websiteUrl: currentEmployer.employerDetails.websiteUrl,
+          yearOfEstablishment: currentEmployer.employerDetails.yearOfEstablishment?.toString(),
+          avatarUrl: currentEmployer.avatarUrl,
+          bannerImageUrl:currentEmployer.employerDetails.bannerImageUrl
+        } as EmployerProfileData
+      } />
     </div>
   )
 }
