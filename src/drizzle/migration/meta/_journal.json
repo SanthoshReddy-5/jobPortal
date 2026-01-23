@@ -43,6 +43,20 @@
       "when": 1765990376171,
       "tag": "0005_abandoned_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1767888018830,
+      "tag": "0006_cheerful_scorpion",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1768323551781,
+      "tag": "0007_steady_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

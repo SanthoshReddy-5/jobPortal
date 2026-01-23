@@ -14,7 +14,8 @@ const EmployerSettingsPage = async () => {
   console.log("Current Employer:", currentEmployer);
 
   return (
-    <div>
+    <div  className='container mx-auto py-6'>
+      <h1 className='text-2xl font-bold mb-6'>Finish setting up your profile!</h1>
       <EmployerSettingsForm initialData={
         {
           name: currentEmployer.employerDetails.name,

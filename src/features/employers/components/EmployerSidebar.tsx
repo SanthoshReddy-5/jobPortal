@@ -13,8 +13,8 @@ const base = "/employer-dashboard";
 const navigationItems = [
     { name: "Overview", icon: LayoutDashboard, href: base + "/" },
     { name: "Employers Profile", icon: User },
-    { name: "Post a Job", icon: Plus },
-    { name: "My Jobs", icon: Briefcase },
+    { name: "Post a Job", icon: Plus, href: base + "/jobs/create"},
+    { name: "My Jobs", icon: Briefcase, href: base + "/jobs" },
     { name: "Saved Candidate", icon: Bookmark },
     { name: "Plans & Billing", icon: CreditCard },
     { name: "All Companies", icon: Building },
@@ -46,8 +46,8 @@ const EmployerSidebar = () => {
     return (
         <div className="w-64 bg-card border-r border-border fixed bottom-0 top-0">
             <div className="p-6">
-                <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                    Employers Dashboard
+                <h2 className="text-lg font-bold">
+                    Employer's Dashboard
                 </h2>
             </div>
 

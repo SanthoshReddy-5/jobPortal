@@ -1,0 +1,1 @@
+ALTER TABLE `jobs` RENAME COLUMN `man_salary` TO `max_salary`;
