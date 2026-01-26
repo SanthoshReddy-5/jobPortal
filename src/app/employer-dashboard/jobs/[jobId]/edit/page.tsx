@@ -1,11 +1,12 @@
-import { error } from "console";
+import { JobPostingForm } from "@/features/employers/components/JobPostingForm";
+import { getJobDetailsByIdAction } from "@/features/employers/jobActions";
 import { redirect } from "next/navigation";
 
 interface EditJobPageProps{
     params:{jobId:string};
 }
 
-const EditJobPage = ({params}:EditJobPageProps) => {
+const EditJobPage = async ({params}:EditJobPageProps) => {
 
   const jobId=Number(params.jobId);
 
@@ -13,7 +14,7 @@ const EditJobPage = ({params}:EditJobPageProps) => {
       redirect("employer-dashboard/jobs");
   }
 
-  const {status,data:job}=getJobByIdAction(jobId);
+  const {status, data:job}=await getJobDetailsByIdAction(jobId);
   console.log("Job data fetched",job);
 
   if(status==="ERROR" || !job){
@@ -21,9 +22,12 @@ const EditJobPage = ({params}:EditJobPageProps) => {
   }
 
   return (
-    <div className='flex flex-col gap-4'>
-      <h1 className='text-2xl font-bold'>Edit job Post!</h1>
-      <p>Editing job with ID: {jobId}</p>
+    <div className='max-w-3xl mx-auto py-8'>
+      <div className="mb-8">
+        <h1 className='text-2xl font-bold'>Editing job: {job.title}</h1>
+      </div>
+
+      <JobPostingForm initialData={job} isEditMode={true}/>
     </div>
   )
 }

@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 import Tiptap from "@/components/TiptapEditor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { JobFormData, jobSchema } from "../jobSchema";
-import { createJobAction } from "../jobActions";
+import { createJobAction, updateJobAction } from "../jobActions";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export type SalaryCurrency = (typeof SALARY_CURRENCY)[number];
 export type SalaryPeriod = (typeof SALARY_PERIOD)[number];
@@ -22,23 +23,61 @@ export type WorkType = (typeof WORK_TYPE)[number];
 export type JobLevel = (typeof JOB_LEVEL)[number];
 export type MinEducation = (typeof MIN_EDUCATION)[number];
 
-export const JobPostingForm = () => {
+interface JobPostFormProps {
+  initialData?: any,
+  isEditMode?: boolean
+}
+
+export const JobPostingForm = ({ initialData, isEditMode = false }: JobPostFormProps) => {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors, isDirty, isSubmitting },
   } = useForm({
-    resolver:zodResolver(jobSchema)
+    resolver: zodResolver(jobSchema),
+    defaultValues: initialData ? {
+      ...initialData,
+      expiresAt: initialData.expiresAt ? new Date(initialData.expiresAt).toISOString().split("T")[0] : ""
+    } : {
+      title: "",
+      description: "",
+      jobType: undefined,
+      workType: undefined,
+      jobLevel: undefined,
+      location: "",
+      tags: "",
+      minSalary: "",
+      maxSalary: "",
+      salaryCurrency: undefined,
+      salaryPeriod: undefined,
+      minEducation: undefined,
+      experience: "",
+      expiresAt: ""
+    }
   });
 
-  const handleFormSubmit = async (data: JobFormData) => {
-    const response = await createJobAction(data);
+  const router = useRouter();
 
-    if (response.status==="SUCCESS"){
-      toast.success(response.message);
-    }else{
-      toast.error(response.message);
+  const handleFormSubmit = async (data: JobFormData) => {
+    try {
+
+      let response;
+
+      if (isEditMode && initialData) {
+        response = await updateJobAction(initialData.id, data);
+      } else {
+        response = await createJobAction(data);
+      }
+
+      if (response.status === "SUCCESS") {
+        toast.success(response.message);
+        router.push("/employer-dashboard/jobs");
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
     }
   };
 
@@ -60,7 +99,7 @@ export const JobPostingForm = () => {
               />
             </div>
             {errors.title && (
-              <p className="text-sm text-destructive">{errors.title.message}</p>
+              <p className="text-sm text-destructive">{errors.title.message as string}</p>
             )}
           </div>
 
@@ -97,7 +136,7 @@ export const JobPostingForm = () => {
               />
               {errors.jobType && (
                 <p className="text-sm text-destructive">
-                  {errors.jobType.message}
+                  {errors.jobType.message as string}
                 </p>
               )}
             </div>
@@ -133,7 +172,7 @@ export const JobPostingForm = () => {
               />
               {errors.workType && (
                 <p className="text-sm text-destructive">
-                  {errors.workType.message}
+                  {errors.workType.message as string}
                 </p>
               )}
             </div>
@@ -169,7 +208,7 @@ export const JobPostingForm = () => {
               />
               {errors.jobLevel && (
                 <p className="text-sm text-destructive">
-                  {errors.jobLevel.message}
+                  {errors.jobLevel.message as string}
                 </p>
               )}
             </div>
@@ -195,7 +234,7 @@ export const JobPostingForm = () => {
               </div>
               {errors.location && (
                 <p className="text-sm text-destructive">
-                  {errors.location.message}
+                  {errors.location.message as string}
                 </p>
               )}
             </div>
@@ -215,7 +254,7 @@ export const JobPostingForm = () => {
               </div>
               {errors.tags && (
                 <p className="text-sm text-destructive">
-                  {errors.tags.message}
+                  {errors.tags.message as string}
                 </p>
               )}
             </div>
@@ -242,7 +281,7 @@ export const JobPostingForm = () => {
               </div>
               {errors.minSalary && (
                 <p className="text-sm text-destructive">
-                  {errors.minSalary.message}
+                  {errors.minSalary.message as string}
                 </p>
               )}
             </div>
@@ -266,7 +305,7 @@ export const JobPostingForm = () => {
               </div>
               {errors.maxSalary && (
                 <p className="text-sm text-destructive">
-                  {errors.maxSalary.message}
+                  {errors.maxSalary.message as string}
                 </p>
               )}
             </div>
@@ -299,7 +338,7 @@ export const JobPostingForm = () => {
               />
               {errors.salaryCurrency && (
                 <p className="text-sm text-destructive">
-                  {errors.salaryCurrency.message}
+                  {errors.salaryCurrency.message as string}
                 </p>
               )}
             </div>
@@ -332,7 +371,7 @@ export const JobPostingForm = () => {
               />
               {errors.salaryPeriod && (
                 <p className="text-sm text-destructive">
-                  {errors.salaryPeriod.message}
+                  {errors.salaryPeriod.message as string}
                 </p>
               )}
             </div>
@@ -371,7 +410,7 @@ export const JobPostingForm = () => {
               />
               {errors.minEducation && (
                 <p className="text-sm text-destructive">
-                  {errors.minEducation.message}
+                  {errors.minEducation.message as string}
                 </p>
               )}
             </div>
@@ -393,7 +432,7 @@ export const JobPostingForm = () => {
               </div>
               {errors.expiresAt && (
                 <p className="text-sm text-destructive">
-                  {errors.expiresAt.message}
+                  {errors.expiresAt.message as string}
                 </p>
               )}
             </div>
@@ -420,7 +459,7 @@ export const JobPostingForm = () => {
             </div>
             {errors.experience && (
               <p className="text-sm text-destructive">
-                {errors.experience.message}
+                {errors.experience.message as string}
               </p>
             )}
           </div>
@@ -434,7 +473,7 @@ export const JobPostingForm = () => {
                 <Tiptap
                   content={field.value}
                   onChange={(value) => field.onChange(value)}
-                  // toolbarClassName="top-16"
+                // toolbarClassName="top-16"
                 />
                 {fieldState.error && (
                   <p className="text-sm text-destructive">
@@ -452,9 +491,9 @@ export const JobPostingForm = () => {
               className="w-full md:w-auto"
             >
               {isSubmitting && <Loader className="w-4 h-4 animate-spin" />}
-              {isSubmitting ? "Saving..." : "Post Job"}
+              {isEditMode ? isSubmitting ? "Saving..." : "Update Job" : isSubmitting ? "Saving..." : "Post Job"}
             </Button>
-            {!isDirty && (
+            {isEditMode && !isDirty && (
               <p className="text-sm text-muted-foreground">
                 No changes to save
               </p>
