@@ -13,7 +13,7 @@ const base = "/employer-dashboard";
 const navigationItems = [
     { name: "Overview", icon: LayoutDashboard, href: base + "/" },
     { name: "Employers Profile", icon: User },
-    { name: "Post a Job", icon: Plus, href: base + "/jobs/create"},
+    { name: "Post a Job", icon: Plus, href: base + "/jobs/create" },
     { name: "My Jobs", icon: Briefcase, href: base + "/jobs" },
     { name: "Saved Candidate", icon: Bookmark },
     { name: "Plans & Billing", icon: CreditCard },
@@ -55,18 +55,20 @@ const EmployerSidebar = () => {
                 {navigationItems.map((item) => {
                     const Icon = item.icon;
 
-                    return <Link key={item.name} href={item.href || "#"}
-                        className={cn(
-                            "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
-                            isLinkActive({
-                                href: item.href || "#",
-                                pathname,
-                                base: "/employer-dashboard",
-                            }) && "text-secondary bg-primary"
-                        )}>
-                        <Icon />
-                        {item.name}
-                    </Link>;
+                    return (
+                        <Link key={item.name} href={item.href || "#"}
+                            className={cn(
+                                "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                                isLinkActive({
+                                    href: item.href || "#",
+                                    pathname,
+                                    base: "/employer-dashboard",
+                                }) && "text-secondary bg-primary"
+                            )}>
+                            <Icon className="w-4 h-4" />
+                            {item.name}
+                        </Link>
+                    );
                 })}
             </nav>
 

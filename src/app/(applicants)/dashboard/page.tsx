@@ -1,4 +1,3 @@
-import { logoutUserAction } from '@/features/auth/authActions';
 import { getCurrentUser } from '@/features/auth/authQueries';
 import { redirect } from 'next/navigation';
 import React from 'react'

@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { EmployerProfileData, employerProfileSchema, organizationTypeOptions, teamSizeOptions } from '../employerSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import TiptapEditor from '@/components/TiptapEditor';
-import { UploadButton, useUploadThing } from '@/lib/uploadthing';
+import { useUploadThing } from '@/lib/uploadthing';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useDropzone } from '@uploadthing/react';
