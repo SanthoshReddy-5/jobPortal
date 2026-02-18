@@ -1,21 +1,33 @@
+import { ApplicantProfileStatus } from '@/features/applicants/components/ApplicantProfileStatus';
+import { ApplicantStats } from '@/features/applicants/components/ApplicantStats';
+import { RecentApplications } from '@/features/applicants/components/RecentApplications';
 import { getCurrentUser } from '@/features/auth/authQueries';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
 const ApplicantDashboard = async () => {
-
   const user = await getCurrentUser();
-  console.log("user data:", user);
 
   if (!user) {
     return redirect("/login");
   }
 
   return (
-    <div className='bg-black text-white p-10'>
-      <h1>Applicant Dashboard</h1>
-      <h2>Hello, {user?.name}!</h2>
-      <h2>Your Email: {user?.email}</h2>
+    <div className="space-y-8 p-6 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+          Hello, <span className="capitalize">{user.name}</span>
+        </h1>
+        <p className="text-gray-500">
+          Here is your daily activities and job alerts
+        </p>
+      </div>
+
+      <ApplicantStats />
+
+      <ApplicantProfileStatus />
+      
+      <RecentApplications />
     </div>
   )
 }

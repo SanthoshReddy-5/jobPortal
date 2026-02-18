@@ -1,10 +1,37 @@
 import React from 'react';
-import { getJobs } from '@/features/employers/jobQueries';
+import { getJobs, JobFilterParams } from '@/features/employers/jobQueries';
 import JobCard from '@/features/employers/components/JobCard';
+import { JobFilters } from '@/features/applicants/components/JobFilters';
 
-const JobsPage = async () => {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-  const jobs = await getJobs();
+const JobsPage = async ({ searchParams }: PageProps) => {
+
+  const resolvedParams = await searchParams;
+  console.log("resolvedParams: ", resolvedParams);
+
+  const filters: JobFilterParams = {
+    search:
+      typeof resolvedParams.search === "string"
+        ? resolvedParams.search
+        : undefined,
+    jobType:
+      typeof resolvedParams.jobType === "string"
+        ? resolvedParams.jobType
+        : undefined,
+    jobLevel:
+      typeof resolvedParams.jobLevel === "string"
+        ? resolvedParams.jobLevel
+        : undefined,
+    workType:
+      typeof resolvedParams.workType === "string"
+        ? resolvedParams.workType
+        : undefined,
+  };
+  
+  const jobs = await getJobs(filters);
   console.log("Jobs:", jobs);
 
   return (
@@ -13,6 +40,8 @@ const JobsPage = async () => {
          <h1 className='text-2xl font-bold tracking-tight text-gray-900'>Find your Next Dream Job!</h1>
          <p className='text-gray-500'>Browse latest job openings from top companies</p>
       </div>
+
+      <JobFilters />
 
         {jobs.length>0?(
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>

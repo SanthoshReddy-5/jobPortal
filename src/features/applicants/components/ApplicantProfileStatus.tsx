@@ -1,20 +1,10 @@
+import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { redirect } from "next/navigation";
-import { getCurrentEmployerDetails } from "../employerQueries";
 
-export async function ProfileCompletionStatus() {
-  const currentEmployer = await getCurrentEmployerDetails();
-
-  if (!currentEmployer) {
-    return redirect("/login");
-  }
-
-  if (currentEmployer.isProfileCompleted) {
-    return null;
-  }
+export function ApplicantProfileStatus() {
+  // You can add logic here later: if (user.profileComplete) return null;
 
   return (
     <Alert
@@ -30,15 +20,15 @@ export async function ProfileCompletionStatus() {
             Complete Your Profile
           </AlertTitle>
           <AlertDescription className="text-sm">
-            You haven’t completed your employer profile. Complete it now to post
-            jobs, manage applicants, and unlock all features.
+            You haven’t completed your applicant profile.
+            Complete it now & build your custom Resume to get better job alerts.
           </AlertDescription>
         </div>
       </div>
 
       <Button variant="destructive" size="sm" className="w-fit" asChild>
-        <Link href="/employer-dashboard/settings">Complete Profile</Link>
+        <Link href="/dashboard/settings">Complete Profile</Link>
       </Button>
     </Alert>
-  )
+  );
 }

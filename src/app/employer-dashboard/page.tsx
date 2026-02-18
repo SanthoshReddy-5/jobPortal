@@ -20,7 +20,7 @@ const EmployerDashboard = async () => {
           Hello, <span className="capitalize">{user?.name.toLowerCase()}</span>
         </h1>
         <p className="text-muted-foreground">
-          Here is your daily activities and appLications
+          Here is your daily activities and applications
         </p>
       </div>
 
