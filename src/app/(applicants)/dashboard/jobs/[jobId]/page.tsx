@@ -51,7 +51,7 @@ const jobDetailsPage = async ({ params }: JobDetailsPageProps) => {
               About the selected Job!
             </h1>
             <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
-              <span className="font-medium text-blue-600 flex items-center gap-1">
+              <span className="flex items-center gap-1">
                 <Building2 className="h-4 w-4" />
                 {job.companyName}
               </span>

@@ -107,3 +107,30 @@ export const jobsRelations=relations(jobs,({one})=>({
     references:[employers.id]
    })
 }));
+
+export const resumes = mysqlTable("resumes", {
+  id: int("id").autoincrement().primaryKey(),
+  applicantId: int("applicant_id")
+    .notNull()
+    .references(() => applicants.id, { onDelete: "cascade" }),
+
+  fileUrl: text("file_url").notNull(), // The UploadThing URL
+  fileName: varchar("file_name", { length: 255 }).notNull(),
+
+  fileSize: int("file_size"),
+  isPrimary: boolean("is_primary").default(false),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export const resumesRelations = relations(resumes, ({ one }) => ({
+  applicant: one(applicants, {
+    fields: [resumes.applicantId],
+    references: [applicants.id],
+  }),
+}));
+
+export const applicantsRelations = relations(applicants, ({ many }) => ({
+  resumes: many(resumes),
+}));
