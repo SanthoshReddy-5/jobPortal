@@ -64,6 +64,13 @@
       "when": 1772262718958,
       "tag": "0008_gray_firebrand",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1773154937453,
+      "tag": "0009_free_ultragirl",
+      "breakpoints": true
     }
   ]
 }

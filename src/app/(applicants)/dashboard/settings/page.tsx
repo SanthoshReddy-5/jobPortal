@@ -1,7 +1,18 @@
+import { getApplicantProfileData } from '@/features/applicants/applicantQueries';
 import ApplicantSettingsForm from '@/features/applicants/components/ApplicantSettingsForm';
+import { getCurrentUser } from '@/features/auth/authQueries';
+import { redirect } from 'next/navigation';
 import React from 'react';
 
-const ApplicantSettingsPage = () => {
+const ApplicantSettingsPage = async () => {
+  const user=await getCurrentUser();
+
+  if(!user){
+    redirect("/login");
+  }
+
+  const initialData=await getApplicantProfileData(user.id);
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 py-8">
       <div>
@@ -11,7 +22,7 @@ const ApplicantSettingsPage = () => {
         </p>
       </div>
 
-      <ApplicantSettingsForm />
+      <ApplicantSettingsForm initialData={initialData} />
     </div>
   )
 }

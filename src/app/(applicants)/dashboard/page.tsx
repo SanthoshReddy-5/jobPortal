@@ -1,6 +1,6 @@
 import { ApplicantProfileStatus } from '@/features/applicants/components/ApplicantProfileStatus';
 import { ApplicantStats } from '@/features/applicants/components/ApplicantStats';
-import { RecentApplications } from '@/features/applicants/components/RecentApplications';
+import { RecentlyAppliedJobs } from '@/features/applicants/components/RecentlyAppliedJobs';
 import { getCurrentUser } from '@/features/auth/authQueries';
 import { redirect } from 'next/navigation';
 import React from 'react'
@@ -27,7 +27,7 @@ const ApplicantDashboard = async () => {
 
       <ApplicantProfileStatus />
       
-      <RecentApplications />
+      <RecentlyAppliedJobs />
     </div>
   )
 }

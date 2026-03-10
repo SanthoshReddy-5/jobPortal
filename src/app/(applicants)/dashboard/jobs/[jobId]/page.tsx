@@ -1,5 +1,5 @@
 import { getJobById } from '@/features/employers/jobQueries';
-import { Building2, ChevronRight, Clock, MapPin } from 'lucide-react';
+import { Building2, Clock, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -7,6 +7,12 @@ import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import JobOverview from '@/features/applicants/components/JobOverview';
+
+import { db } from "@/config/db";
+import { jobApplications, resumes } from "@/drizzle/schema";
+import { eq, and } from "drizzle-orm";
+import { getCurrentUser } from '@/features/auth/authQueries';
+import { ApplyJobModal } from '@/features/applicants/components/ApplyJobModal';
 
 interface JobDetailsPageProps {
   params: { jobId: string };
@@ -23,6 +29,24 @@ const jobDetailsPage = async ({ params }: JobDetailsPageProps) => {
 
   if (!job) {
     return notFound();
+  }
+
+  const user = await getCurrentUser();
+  let hasApplied = false;
+  let userResumes: { id: number; fileName: string }[] = [];
+
+  if (user) {
+    const existingApplication = await db.select().from(jobApplications).where(
+      and(
+        eq(jobApplications.jobId, jobId),
+        eq(jobApplications.applicantId, user.id),
+      )).limit(1);
+
+    hasApplied = existingApplication.length > 0;
+
+    userResumes = await db.select({
+      id: resumes.id, fileName: resumes.fileName
+    }).from(resumes).where(eq(resumes.applicantId, user.id));
   }
 
   return (
@@ -72,11 +96,22 @@ const jobDetailsPage = async ({ params }: JobDetailsPageProps) => {
           </div>
         </div>
 
-        {/* Action Button */}
         <div className="flex gap-3 w-full md:w-auto mt-4 md:mt-0">
-          <Button size="lg" className="w-full md:w-auto font-semibold">
-            Apply Now
-          </Button>
+          {user ? (
+            <ApplyJobModal
+              jobId={jobId}
+              jobTitle={job.title}
+              hasApplied={hasApplied}
+              resumes={userResumes}
+            />
+          ) : (
+            <Button
+              size="lg"
+              className="w-full md:w-auto font-semibold"
+              asChild>
+              <Link href="/login">Login to Apply</Link>
+            </Button>
+          )}
         </div>
       </div>
 

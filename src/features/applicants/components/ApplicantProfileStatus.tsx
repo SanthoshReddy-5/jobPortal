@@ -2,9 +2,29 @@ import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getCurrentUser } from "@/features/auth/authQueries";
+import { redirect } from "next/navigation";
+import { getApplicantProfileData } from "../applicantQueries";
 
-export function ApplicantProfileStatus() {
-  // You can add logic here later: if (user.profileComplete) return null;
+export async function ApplicantProfileStatus() {
+  const user=await getCurrentUser();
+
+  if(!user){
+    return redirect("/login");
+  }
+
+  const profileData=await getApplicantProfileData(user.id);
+
+  const isCompleted= !!(
+    profileData?.location &&
+    profileData?.biography &&
+    profileData?.experience &&
+    profileData?.resumeUrl
+  );
+
+  if(isCompleted){
+    return null;
+  }
 
   return (
     <Alert

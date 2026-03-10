@@ -14,10 +14,15 @@ import TiptapEditor from "@/components/TiptapEditor";
 import { ImageUpload } from "@/features/employers/components/EmployerSettingsForm";
 import { cn } from "@/lib/utils";
 import { ResumeUpload } from "./ResumeUpload";
-import { createApplicantProfile } from "../applicantActions";
+import { saveApplicantProfile } from "../applicantActions";
 import { toast } from "sonner";
+import { ApplicantProfileType } from "../applicantQueries";
 
-const ApplicantSettingsForm = () => {
+interface ApplicantSettingsFormProps{
+  initialData:ApplicantProfileType | null;
+}
+
+const ApplicantSettingsForm = ({initialData}:ApplicantSettingsFormProps) => {
   const {
     register,
     handleSubmit,
@@ -26,14 +31,16 @@ const ApplicantSettingsForm = () => {
     formState: { errors, isDirty, isSubmitting },
   } = useForm<ApplicantSettingsSchema>({
     resolver: zodResolver(applicantSettingsSchema),
-    defaultValues: {
-      email: "example@gmail.com",
+    defaultValues: initialData || {
+      email: "",
     }
   });
 
+  const isUpdating=!!initialData?.location;
+
   const onSubmit = async (data: ApplicantSettingsSchema) => {
     try {
-      const res = await createApplicantProfile(data);
+      const res = await saveApplicantProfile(data);
       if (res.status === "SUCCESS") {
         toast.success(res.message);
       } else {
@@ -396,11 +403,18 @@ const ApplicantSettingsForm = () => {
         <div className="flex items-center gap-4">
           <Button
             type="submit"
-            disabled={isSubmitting}
-            className="min-w-[150px]"
-          >
+            // Disable the button if submitting OR if the user hasn't changed any fields
+            disabled={isSubmitting || !isDirty}
+            className="min-w-[150px]">
             {isSubmitting && <Loader className="w-4 h-4 mr-2 animate-spin" />}
-            {isSubmitting ? "Saving..." : "Save Changes"}
+
+            {isSubmitting
+              ? isUpdating
+                ? "Updating..."
+                : "Saving..."
+              : isUpdating
+                ? "Update Profile"
+                : "Save Profile"}
           </Button>
 
           {!isDirty && (
