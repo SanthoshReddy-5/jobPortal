@@ -12,13 +12,10 @@ const base = "/employer-dashboard";
 
 const navigationItems = [
     { name: "Overview", icon: LayoutDashboard, href: base + "/" },
-    { name: "Employers Profile", icon: User },
+    { name: "Applications", icon: User, href: base + "/applications" },
     { name: "Post a Job", icon: Plus, href: base + "/jobs/create" },
     { name: "My Jobs", icon: Briefcase, href: base + "/jobs" },
-    { name: "Saved Candidate", icon: Bookmark },
-    { name: "Plans & Billing", icon: CreditCard },
-    { name: "All Companies", icon: Building },
-    { name: "Settings", icon: Settings, href: base + "/settings" },
+    { name: "Settings", icon: Settings, href: base + "/settings" }
 ];
 
 const EmployerSidebar = () => {
