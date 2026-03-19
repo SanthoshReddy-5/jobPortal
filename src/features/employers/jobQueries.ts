@@ -1,17 +1,23 @@
 import { db } from "@/config/db";
 import { employers, jobs, users } from "@/drizzle/schema";
-import { eq, isNull, and, or, gte, desc, SQL, like } from "drizzle-orm";
+import { eq, isNull, and, or, gte, desc, SQL, like, sql } from "drizzle-orm";
 
 export interface JobFilterParams {
     search?: string;
     jobType?: string;
     jobLevel?: string;
     workType?: string;
+    page?: number;
+    limit?: number;
 }
 
 export async function getJobs(filters: JobFilterParams) {
 
     console.log("filters: ", filters);
+
+    const page = filters.page || 1;
+    const limit = filters.limit || 9;
+    const offset = (page - 1) * limit;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset time to 00:00:00
@@ -63,12 +69,22 @@ export async function getJobs(filters: JobFilterParams) {
         companyLogo: users.avatarUrl
     }).from(jobs).innerJoin(employers, eq(jobs.employerId, employers.id))
     .innerJoin(users, eq(employers.id, users.id)).where(and(...conditions))
-    .orderBy(desc(jobs.createdAt));
+    .orderBy(desc(jobs.createdAt)).limit(limit).offset(offset);
 
-    return jobsData;
+    const countResult = await db.select({
+        count: sql<number>`count(*)` }
+    ).from(jobs).innerJoin(employers, eq(
+        jobs.employerId, employers.id)
+    ).innerJoin(users, eq(
+        employers.id, users.id)
+    ).where(and(...conditions));
+
+    const totalCount = Number(countResult[0]?.count || 0);
+
+    return { jobs: jobsData, totalCount };
 }
 
-export type JobCardType = Awaited<ReturnType<typeof getJobs>>[number];
+export type JobCardType = Awaited<ReturnType<typeof getJobs>>["jobs"][number];
 
 export async function getJobById(jobId: number) {
     const job = await db.select({
