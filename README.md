@@ -45,7 +45,7 @@ A full-stack Job Portal built with modern web technologies, developed as part of
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd job-portal
+   cd jobPortal
    ```
 
 2. **Install dependencies:**
