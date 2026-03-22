@@ -32,7 +32,7 @@ export default async function Navbar() {
         <div className="flex items-center gap-3">
           {!user ? (
             <>
-              <Button variant="outline" asChild>
+              <Button variant="outline" className="hover:bg-primary hover:text-secondary" asChild>
                 <Link href="/login">Sign In</Link>
               </Button>
               <Button asChild>
