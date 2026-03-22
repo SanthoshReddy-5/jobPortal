@@ -7,7 +7,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import JobOverview from '@/features/applicants/components/JobOverview';
-
 import { db } from "@/config/db";
 import { jobApplications, resumes } from "@/drizzle/schema";
 import { eq, and } from "drizzle-orm";

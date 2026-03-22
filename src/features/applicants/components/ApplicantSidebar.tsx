@@ -10,7 +10,6 @@ import { applicantNavItems } from "@/config/constants";
 
 const ApplicantSidebar = () => {
     const pathname = usePathname();
-    console.log("pathname:", pathname);
 
     return (
         <div className="w-64 bg-card border-r border-border fixed bottom-0 top-0">

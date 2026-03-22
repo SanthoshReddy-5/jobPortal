@@ -5,9 +5,7 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 
 const EmployerDashboard = async () => {
-
   const user = await getCurrentUser();
-  console.log("user data:", user);
 
   if (!user) {
     return redirect("/login");

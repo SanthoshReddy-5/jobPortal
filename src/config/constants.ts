@@ -70,6 +70,5 @@ export const applicantNavItems: NavItem[] = [
     { name: "Home", href:"/dashboard", icon: LayoutDashboard, exact:true},
     { name: "Find Jobs",href:"/jobs", icon: Search},
     { name: "Applied",href:"/dashboard/applied-jobs", icon: Briefcase,badge:"dynamic" },
-    { name: "Saved Jobs",href:"/dashboard/saved-jobs", icon: Bookmark,badge:"dynamic" },
     { name: "Settings",href:"/dashboard/settings", icon: Settings }
 ];

@@ -9,10 +9,7 @@ interface PageProps {
 }
 
 const JobsPage = async ({ searchParams }: PageProps) => {
-
   const resolvedParams = await searchParams;
-  console.log("resolvedParams: ", resolvedParams);
-
   const currentPage = Number(resolvedParams.page) || 1;
   const ITEMS_PER_PAGE = 9;
 
@@ -38,12 +35,7 @@ const JobsPage = async ({ searchParams }: PageProps) => {
   };
 
   const { jobs, totalCount } = await getJobs(filters);
-  console.log("Jobs:", jobs);
-
-  // 3. Pagination Math
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-
-  // 4. Calculate the 3-page Sliding Window
   let startPage = Math.max(1, currentPage - 1);
   let endPage = Math.min(totalPages, currentPage + 1);
 
@@ -58,11 +50,9 @@ const JobsPage = async ({ searchParams }: PageProps) => {
     visiblePages.push(i);
   }
 
-  // 5. Helper to preserve search filters in the URL when changing pages
   const createPageUrl = (pageNum: number) => {
     const params = new URLSearchParams();
 
-    // Copy all existing search params
     Object.entries(resolvedParams).forEach(([key, value]) => {
       if (value && key !== "page") {
         params.set(key, String(value));

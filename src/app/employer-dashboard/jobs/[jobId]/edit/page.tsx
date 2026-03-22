@@ -15,7 +15,6 @@ const EditJobPage = async ({params}:EditJobPageProps) => {
   }
 
   const {status, data:job}=await getJobDetailsByIdAction(jobId);
-  console.log("Job data fetched",job);
 
   if(status==="ERROR" || !job){
     redirect("employer-dashboard/jobs");

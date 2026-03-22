@@ -11,10 +11,7 @@ import { JOB_TYPE, WORK_TYPE, JOB_LEVEL } from "@/config/constants";
 export const JobFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log("searchParams: ", searchParams);
-  console.log("searchParams string: ", searchParams.toString());
 
-  // Local state for immediate UI feedback
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [jobType, setJobType] = useState(searchParams.get("jobType") || "");
   const [jobLevel, setJobLevel] = useState(searchParams.get("jobLevel") || "");
@@ -30,20 +27,31 @@ export const JobFilters = () => {
 
   const updateFilters = (newParams: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
-    console.log("params: ", params);
+    let filtersChanged = false;
 
     Object.entries(newParams).forEach(([key, value]) => {
       const actualValue = value?.trim();
+      const currentValue = params.get(key) || "";
 
       if (!actualValue || actualValue === "all") {
-        params.delete(key);
+        if (params.has(key)) {
+          params.delete(key);
+          filtersChanged = true;
+        }
       } else {
-        params.set(key, actualValue);
+        if (currentValue !== actualValue) {
+          params.set(key, actualValue);
+          filtersChanged = true;
+        }
       }
     });
 
-    router.push(`?${params.toString()}`, { scroll: false });
+    if (filtersChanged) {
+      params.set("page", "1");
+      router.push(`?${params.toString()}`, { scroll: false });
+    }
   };
+
 
   const clearFilters = () => {
     setSearch("");

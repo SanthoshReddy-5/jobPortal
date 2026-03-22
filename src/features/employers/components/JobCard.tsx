@@ -20,7 +20,7 @@ const JobCard = ({ job }: JobCardProps) => {
     }
 
     return (
-        <Link href={`/dashboard/jobs/${job.id}`} className='group flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-blue-500/50 hover:shadow-md'>
+        <Link href={`/jobs/${job.id}`} className='group flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-blue-500/50 hover:shadow-md'>
             <div className='flex items-start justify-between gap-4'>
                 <div className='flex gap-3'>
                     <div className='relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-50'>

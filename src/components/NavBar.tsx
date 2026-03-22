@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Briefcase, LogOut } from "lucide-react"; // Import LogOut icon
+import { Briefcase, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { logoutUserAction } from "@/features/auth/authActions";
 import { getCurrentUser } from "@/features/auth/authQueries";
@@ -12,28 +12,27 @@ export default async function Navbar() {
       <div className="container mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2 font-bold text-xl text-blue-600"
-        >
+          className="flex items-center gap-2 font-bold text-xl text-primary">
           <Briefcase className="w-6 h-6" />
-          JobAtlas
+          JobPortal
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
           <Link href="/" className="hover:text-blue-600 transition-colors">
-            Home
+            HOME
           </Link>
           <Link href="/jobs" className="hover:text-blue-600 transition-colors">
-            Find Job
+            FIND JOB
           </Link>
           <Link href="/" className="hover:text-blue-600 transition-colors">
-            Employers
+            EMPLOYERS
           </Link>
         </nav>
 
         <div className="flex items-center gap-3">
           {!user ? (
             <>
-              <Button variant="ghost" asChild>
+              <Button variant="outline" asChild>
                 <Link href="/login">Sign In</Link>
               </Button>
               <Button asChild>
@@ -42,26 +41,23 @@ export default async function Navbar() {
             </>
           ) : (
             <>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="hover:bg-primary hover:text-secondary">
                 <Link
                   href={
                     user.role === "employer"
                       ? "/employer-dashboard"
                       : "/dashboard/settings"
-                  }
-                >
+                  }>
                   Dashboard
                 </Link>
               </Button>
 
               <form action={logoutUserAction}>
                 <Button
-                  variant="ghost"
                   type="submit"
                   size="icon"
-                  title="Log out"
-                >
-                  <LogOut className="w-5 h-5 text-gray-600 hover:text-red-600 transition-colors" />
+                  className="hover:bg-red-500 cursor-pointer">
+                  <LogOut className="w-5 h-5 text-secondary" />
                 </Button>
               </form>
             </>
